@@ -125,14 +125,11 @@ CDP_URL=http://127.0.0.1:9222
 ALLOW_HOSTS=www.reddit.com,old.reddit.com
 ```
 
-A wrapper script that loads it, e.g. `/usr/local/bin/chrome-fetch-run`:
+`bin/launchd-run.sh` (included in this repo) loads that file and starts the
+service:
 
 ```sh
-#!/bin/sh
-set -a
-. "$HOME/.config/chrome-fetch/env"
-set +a
-exec node /path/to/chrome-fetch/bin/chrome-fetch.mjs
+ENV_FILE=~/.config/chrome-fetch/env /path/to/chrome-fetch/bin/launchd-run.sh
 ```
 
 `~/Library/LaunchAgents/com.example.chrome-fetch.plist`:
@@ -144,7 +141,7 @@ exec node /path/to/chrome-fetch/bin/chrome-fetch.mjs
 <dict>
   <key>Label</key><string>com.example.chrome-fetch</string>
   <key>ProgramArguments</key>
-  <array><string>/usr/local/bin/chrome-fetch-run</string></array>
+  <array><string>/path/to/chrome-fetch/bin/launchd-run.sh</string></array>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
   <key>StandardOutPath</key><string>/tmp/chrome-fetch.log</string>
