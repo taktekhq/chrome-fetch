@@ -1,0 +1,18 @@
+{
+  "name": "chrome-fetch",
+  "version": "1.0.0",
+  "description": "Fetch a URL through an already-running, logged-in Chrome over DevTools (CDP), for servers that get blocked but a browser does not.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "chrome-fetch": "./bin/chrome-fetch.mjs"
+  },
+  "scripts": {
+    "start": "node bin/chrome-fetch.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {}
+}
