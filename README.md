@@ -68,6 +68,9 @@ var):
   - `400` if the url is not `https://`, or its host is not in `ALLOW_HOSTS`.
   - Otherwise opens a new tab, navigates, waits for the page to load plus
     `WAIT_S` more, and returns `{"status": <http status, best effort>, "body": "<innerText>"}`.
+    Add `&format=html` to get `document.documentElement.outerHTML` instead, for pages whose
+    data lives in attributes (for example Reddit's `<shreddit-post>` elements, now that
+    Reddit blocks its `.json` endpoints for most browsers).
   - The tab is always closed afterwards, including on a timeout or an
     error.
 

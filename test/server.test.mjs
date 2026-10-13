@@ -22,7 +22,8 @@ class FakeChromeSocket {
         });
         this._emit({ method: 'Page.loadEventFired' });
       } else if (msg.method === 'Runtime.evaluate') {
-        this._emit({ id: msg.id, result: { result: { value: 'page text' } } });
+        const value = msg.params.expression.includes('outerHTML') ? '<html>page</html>' : 'page text';
+        this._emit({ id: msg.id, result: { result: { value } } });
       } else {
         this._emit({ id: msg.id, result: {} });
       }
@@ -127,5 +128,25 @@ test('GET /fetch returns the page text and closes the tab it opened', async () =
   assert.equal(res.status, 200);
   assert.deepEqual(await res.json(), { status: 200, body: 'page text' });
   assert.equal(state.opened.size, 0); // closed in finally
+  server.close();
+});
+
+test('GET /fetch with format=html returns the page html', async () => {
+  const { server, base, state } = await startTestServer();
+  const res = await fetch(`${base}/fetch?url=https://www.reddit.com/x&format=html`, {
+    headers: { Authorization: 'Bearer test-token' },
+  });
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { status: 200, body: '<html>page</html>' });
+  assert.equal(state.opened.size, 0);
+  server.close();
+});
+
+test('GET /fetch rejects an unknown format', async () => {
+  const { server, base } = await startTestServer();
+  const res = await fetch(`${base}/fetch?url=https://www.reddit.com/x&format=pdf`, {
+    headers: { Authorization: 'Bearer test-token' },
+  });
+  assert.equal(res.status, 400);
   server.close();
 });
